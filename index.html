@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8"/>
+        <title>VR Web App</title>
+
+        <!--Aframe Scripts-->
+        <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-physics-system@v4.0.1/dist/aframe-physics-system.min.js"></script>
+        <script src="https://unpkg.com/aframe-physics-extras@0.1.2/dist/aframe-physics-extras.min.js"></script>
+        <script src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
+        <script src="https://recast-api.donmccurdy.com/aframe-inspector-plugin-recast.js"></script>
+
+        <!--Local Scripts-->
+        <script src="js/shoot.js"></script>
+        <script src="js/walls.js"></script>
+        <script src="js/player.js"></script>
+    </head>
+    <body>
+        <a-scene id="scene" renderer="colorManagement: true;" inspector-plugin-recast>
+            <!--Assets-->
+            <a-assets>
+                <a-asset-item id="gun-glb" src="./assets/paintball_gun.glb"></a-asset-item>
+                <a-asset-item id="collider" src="./assets/walls.gltf"></a-asset-item>
+
+                <audio id="shoot-wav" src="./assets/sounds/paintball_shoot.wav"></audio>
+                <audio id="step-wav" src="./assets/sounds/footstep.wav"></audio>
+            </a-assets>
+
+            <!--Camera-->
+            <a-entity id="camera-rig" movement-controls="speed:0.2; constrainToNavMesh:true" position="0 -1 5">
+                <a-entity
+                    id="camera"
+                    camera
+                    look-controls="pointerLockEnabled: true"
+                    position="0 3 0"
+                >
+                    <a-cursor></a-cursor>
+                    <a-entity
+                        id="gun"
+                        position=".5 -1 -2"
+                        rotation="0 180 0"
+                        scale=".05 .05 .05"
+                        gltf-model="#gun-glb"
+                    ></a-entity>
+
+                    <!--Sounds-->
+                    <a-entity 
+                        id="shoot" 
+                        sound="
+                            src: #shoot-wav; 
+                            poolSize:2; 
+                            autoplay: false; 
+                            volume: 0.5;
+                            loop:false
+                        "
+                    ></a-entity>
+                    <a-entity 
+                        id="step" 
+                        sound="
+                            src: #step-wav; 
+                            poolSize:2; 
+                            autoplay: false; 
+                            volume: 0.05;
+                            loop:false
+                        "
+                    ></a-entity>
+                </a-entity>
+            </a-entity>
+
+            <a-entity gltf-model="#collider" visible="true" nav-mesh></a-entity>
+
+            <!--Environment-->
+            <a-entity 
+                id="environment"
+                environment="preset: default; skyType: gradient; lighting: point;"
+            ></a-entity>
+            <a-plane
+                id="environment-collider"
+                position="0 -1 0"
+                rotation="-90 0 0"
+                color="#000"
+                width="200"
+                height="200"
+                static-body
+            ></a-plane>
+            
+            <!--Objects-->
+            <a-entity
+                bullets
+            ></a-entity>
+            <a-entity
+                walls2
+            ></a-entity>
+            <a-entity 
+                player-movement
+            ></a-entity>
+            
+        </a-scene>
+    </body>
+</html>
